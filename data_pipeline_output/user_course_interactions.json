@@ -1,0 +1,44 @@
+[
+    {
+        "user_id": 2,
+        "course_id": 1,
+        "user_name": "Анна Студенткина",
+        "course_title": "Python для начинающих: Автоматизация и Скриптинг",
+        "completed_materials_count": 1,
+        "total_materials_in_course": 2,
+        "progress_percentage": 50.0,
+        "total_time_spent_seconds": 2692.56,
+        "actions_count": 2,
+        "avg_score_on_quizzes": null,
+        "last_activity_timestamp": "2025-02-15T08:24:13.877116",
+        "first_activity_timestamp": "2025-02-11T21:24:13.877116"
+    },
+    {
+        "user_id": 2,
+        "course_id": 2,
+        "user_name": "Анна Студенткина",
+        "course_title": "Data Science: от Pandas до Нейронных Сетей",
+        "completed_materials_count": 3,
+        "total_materials_in_course": 3,
+        "progress_percentage": 100.0,
+        "total_time_spent_seconds": 2127.09,
+        "actions_count": 3,
+        "avg_score_on_quizzes": null,
+        "last_activity_timestamp": "2024-12-30T00:24:13.877152",
+        "first_activity_timestamp": "2024-12-11T14:24:13.877152"
+    },
+    {
+        "user_id": 3,
+        "course_id": 4,
+        "user_name": "Петр Пытливый",
+        "course_title": "Основы Дискретной Математики для IT",
+        "completed_materials_count": 2,
+        "total_materials_in_course": 5,
+        "progress_percentage": 40.0,
+        "total_time_spent_seconds": 6704.98,
+        "actions_count": 5,
+        "avg_score_on_quizzes": null,
+        "last_activity_timestamp": "2025-05-29T11:24:13.877173",
+        "first_activity_timestamp": "2025-05-14T20:24:13.877173"
+    }
+]

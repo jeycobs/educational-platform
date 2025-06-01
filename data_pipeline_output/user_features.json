@@ -1,0 +1,92 @@
+[
+    {
+        "user_id": 1,
+        "user_name": "Иван Гениев",
+        "user_email": "ivan.genius@example.com",
+        "role": "teacher",
+        "created_at": "2024-06-20T15:24:12.748647",
+        "is_active": true,
+        "total_courses_interacted_with": 0,
+        "total_courses_completed": 0,
+        "total_activities_logged": 0,
+        "total_time_spent_learning_seconds": 0.0,
+        "avg_progress_on_interacted_courses": null,
+        "avg_score_on_all_quizzes": null,
+        "preferred_categories": [],
+        "preferred_levels": []
+    },
+    {
+        "user_id": 2,
+        "user_name": "Анна Студенткина",
+        "user_email": "anna.student@example.com",
+        "role": "student",
+        "created_at": "2024-08-29T15:24:12.983226",
+        "is_active": true,
+        "total_courses_interacted_with": 2,
+        "total_courses_completed": 1,
+        "total_activities_logged": 5,
+        "total_time_spent_learning_seconds": 4819.65,
+        "avg_progress_on_interacted_courses": 75.0,
+        "avg_score_on_all_quizzes": null,
+        "preferred_categories": [
+            "Программирование",
+            "Аналитика"
+        ],
+        "preferred_levels": [
+            "beginner",
+            "intermediate"
+        ]
+    },
+    {
+        "user_id": 3,
+        "user_name": "Петр Пытливый",
+        "user_email": "petr.curious@example.com",
+        "role": "student",
+        "created_at": "2024-08-03T15:24:13.212138",
+        "is_active": true,
+        "total_courses_interacted_with": 1,
+        "total_courses_completed": 0,
+        "total_activities_logged": 5,
+        "total_time_spent_learning_seconds": 6704.98,
+        "avg_progress_on_interacted_courses": 40.0,
+        "avg_score_on_all_quizzes": null,
+        "preferred_categories": [
+            "Математика"
+        ],
+        "preferred_levels": [
+            "beginner"
+        ]
+    },
+    {
+        "user_id": 4,
+        "user_name": "Мария Администраторова",
+        "user_email": "maria.admin@example.com",
+        "role": "admin",
+        "created_at": "2024-06-22T15:24:13.433157",
+        "is_active": true,
+        "total_courses_interacted_with": 0,
+        "total_courses_completed": 0,
+        "total_activities_logged": 0,
+        "total_time_spent_learning_seconds": 0.0,
+        "avg_progress_on_interacted_courses": null,
+        "avg_score_on_all_quizzes": null,
+        "preferred_categories": [],
+        "preferred_levels": []
+    },
+    {
+        "user_id": 5,
+        "user_name": "Алексей Наставников",
+        "user_email": "alex.mentor@example.com",
+        "role": "teacher",
+        "created_at": "2024-11-21T15:24:13.653326",
+        "is_active": true,
+        "total_courses_interacted_with": 0,
+        "total_courses_completed": 0,
+        "total_activities_logged": 0,
+        "total_time_spent_learning_seconds": 0.0,
+        "avg_progress_on_interacted_courses": null,
+        "avg_score_on_all_quizzes": null,
+        "preferred_categories": [],
+        "preferred_levels": []
+    }
+]

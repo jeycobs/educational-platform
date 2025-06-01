@@ -1,0 +1,4 @@
+user_id,course_id,user_name,course_title,completed_materials_count,total_materials_in_course,progress_percentage,total_time_spent_seconds,actions_count,avg_score_on_quizzes,last_activity_timestamp,first_activity_timestamp
+2,1,Анна Студенткина,Python для начинающих: Автоматизация и Скриптинг,1,2,50.0,2692.56,2,,2025-02-15T08:24:13.877116,2025-02-11T21:24:13.877116
+2,2,Анна Студенткина,Data Science: от Pandas до Нейронных Сетей,3,3,100.0,2127.09,3,,2024-12-30T00:24:13.877152,2024-12-11T14:24:13.877152
+3,4,Петр Пытливый,Основы Дискретной Математики для IT,2,5,40.0,6704.98,5,,2025-05-29T11:24:13.877173,2025-05-14T20:24:13.877173

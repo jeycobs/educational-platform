@@ -1,0 +1,6 @@
+user_id,user_name,user_email,role,created_at,is_active,total_courses_interacted_with,total_courses_completed,total_activities_logged,total_time_spent_learning_seconds,avg_progress_on_interacted_courses,avg_score_on_all_quizzes,preferred_categories,preferred_levels
+1,Иван Гениев,ivan.genius@example.com,teacher,2024-06-20T15:24:12.748647,True,0,0,0,0.0,,,[],[]
+2,Анна Студенткина,anna.student@example.com,student,2024-08-29T15:24:12.983226,True,2,1,5,4819.65,75.0,,"['Программирование', 'Аналитика']","['beginner', 'intermediate']"
+3,Петр Пытливый,petr.curious@example.com,student,2024-08-03T15:24:13.212138,True,1,0,5,6704.98,40.0,,['Математика'],['beginner']
+4,Мария Администраторова,maria.admin@example.com,admin,2024-06-22T15:24:13.433157,True,0,0,0,0.0,,,[],[]
+5,Алексей Наставников,alex.mentor@example.com,teacher,2024-11-21T15:24:13.653326,True,0,0,0,0.0,,,[],[]

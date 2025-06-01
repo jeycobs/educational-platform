@@ -1,0 +1,106 @@
+<!-- templates/index.html -->
+{% extends "base.html" %}
+
+{% block title %}Главная - Образовательная платформа{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="hero-section bg-gradient p-md-5 p-4 rounded mb-4 text-white shadow">
+            <h1 class="display-4 fw-bold mb-3">Добро пожаловать в EduPlatform</h1>
+            <p class="lead mb-4">Современная образовательная платформа для изучения новых навыков и развития профессиональных компетенций.</p>
+            <button class="btn btn-light btn-lg" onclick="showAuthModal()">
+                <i class="bi bi-play-circle-fill me-2"></i>Начать обучение
+            </button>
+        </div>
+
+        <h3 class="mb-3">Популярные курсы</h3>
+        <div class="row" id="coursesContainer">
+            <!-- Courses will be loaded here by app.js -->
+            <div class="col-12">
+                <div class="loading"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-bar-chart-line-fill me-2"></i>Статистика платформы</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Активных курсов
+                    <span class="badge bg-primary rounded-pill" id="totalCourses">-</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Зарегистрировано
+                    <span class="badge bg-success rounded-pill" id="totalUsers">-</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Учебных материалов
+                    <span class="badge bg-info rounded-pill" id="totalMaterials">-</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-tags-fill me-2"></i>Категории курсов</h5>
+            </div>
+            <div class="list-group list-group-flush" id="categoriesList">
+                <!-- Categories could be loaded here dynamically -->
+                <a href="#" class="list-group-item list-group-item-action" onclick="performSearchWithCategory('Программирование')">Программирование</a>
+                <a href="#" class="list-group-item list-group-item-action" onclick="performSearchWithCategory('Аналитика')">Аналитика</a>
+                <a href="#" class="list-group-item list-group-item-action" onclick="performSearchWithCategory('Математика')">Математика</a>
+                <a href="#" class="list-group-item list-group-item-action" onclick="performSearchWithCategory('Гуманитарные науки')">Гуманитарные науки</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadFeaturedCourses(); // Эта функция есть в app.js
+    // loadStatistics(); // Заглушка, так как нет API для реальной статистики
+    
+    // Примерная реализация заглушки для статистики
+    const stats = { totalCourses: 0, totalUsers: 0, totalMaterials: 0 };
+    api.getCourses().then(c => { 
+        stats.totalCourses = c.length;
+        const tcEl = document.getElementById('totalCourses');
+        if (tcEl) tcEl.textContent = stats.totalCourses;
+    });
+    api.request('/users').then(u => { // Предполагаем, что /users возвращает всех (нужен доступ админа)
+        stats.totalUsers = u.length;
+        const tuEl = document.getElementById('totalUsers');
+        if (tuEl) tuEl.textContent = stats.totalUsers;
+    }).catch(e => {
+        const tuEl = document.getElementById('totalUsers');
+        if (tuEl) tuEl.textContent = 'N/A'; // Если нет доступа
+    });
+    api.request('/materials').then(m => {
+        stats.totalMaterials = m.length;
+        const tmEl = document.getElementById('totalMaterials');
+        if (tmEl) tmEl.textContent = stats.totalMaterials;
+    });
+});
+
+function performSearchWithCategory(category) {
+    // Заполняем поле категории в модальном окне поиска и открываем его
+    const searchCategoryModalEl = document.getElementById('searchCategoryModal');
+    if (searchCategoryModalEl) searchCategoryModalEl.value = category;
+    
+    // Очищаем другие поля для чистоты
+    const searchInputModalEl = document.getElementById('searchInputModal');
+    if (searchInputModalEl) searchInputModalEl.value = ''; 
+    
+    showSearchModal();
+    // Можно сразу запустить поиск, если нужно
+    // const searchForm = document.getElementById('searchFormModal');
+    // if(searchForm) handleSearch({ preventDefault: () => {}, target: searchForm });
+}
+</script>
+{% endblock %}

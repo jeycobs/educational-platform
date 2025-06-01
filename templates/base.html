@@ -1,0 +1,241 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Образовательная платформа{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{{ url_for('static', path='/css/custom.css') }}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="bi bi-mortarboard-fill me-2"></i>EduPlatform
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="bi bi-house-door-fill me-1"></i>Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard" style="display: none;"><!-- Скрываем по умолчанию, JS покажет если авторизован -->
+                            <i class="bi bi-speedometer2 me-1"></i>Мои курсы
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSearchModal()">
+                            <i class="bi bi-search me-1"></i>Поиск
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto" id="authNav">
+                    <!-- Заполняется JavaScript -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="py-4 bg-light mt-auto">
+        <div class="container text-center">
+            <small class="text-muted">© {{ year }} EduPlatform. Все права защищены.</small>
+        </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="authModalTitle">Вход в систему</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-pills nav-fill mb-3" id="authTabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" onclick="showLogin()">Вход</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showRegister()">Регистрация</a>
+                        </li>
+                    </ul>
+                    
+                    <!-- Login Form -->
+                    <div id="loginFormContent"> <!-- Изменил ID -->
+                        <form id="loginForm"> <!-- Добавил ID форме -->
+                            <div class="mb-3">
+                                <label for="loginEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="loginEmail" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="loginPassword" class="form-label">Пароль</label>
+                                <input type="password" class="form-control" id="loginPassword" name="password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Войти</button>
+                            <div id="loginMsg" class="mt-2 text-danger small"></div>
+                        </form>
+                    </div>
+                    
+                    <!-- Register Form -->
+                    <div id="registerFormContent" style="display: none;"> <!-- Изменил ID -->
+                        <form id="registerForm"> <!-- Добавил ID форме -->
+                            <div class="mb-3">
+                                <label for="registerName" class="form-label">Имя</label>
+                                <input type="text" class="form-control" id="registerName" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="registerEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="registerEmail" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="registerRole" class="form-label">Роль</label>
+                                <select class="form-select" id="registerRole" name="role" required>
+                                    <option value="student" selected>Студент</option>
+                                    <option value="teacher">Преподаватель</option>
+                                    <!-- <option value="admin">Администратор</option> --><!-- Админа обычно регистрируют иначе -->
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="registerPassword" class="form-label">Пароль (мин. 6 симв.)</label>
+                                <input type="password" class="form-control" id="registerPassword" name="password" required minlength="6">
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">Зарегистрироваться</button>
+                            <div id="registerMsg" class="mt-2 text-danger small"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="searchModalLabel">Поиск контента</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="searchFormModal"> <!-- Добавил ID форме -->
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label for="searchInputModal" class="form-label">Поисковый запрос</label>
+                                <input type="text" class="form-control" id="searchInputModal" name="q" placeholder="Введите ключевые слова, название курса, имя преподавателя...">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="searchCategoryModal" class="form-label">Категория</label>
+                                <select class="form-select" id="searchCategoryModal" name="category">
+                                    <option value="" selected>Все категории</option>
+                                    <option value="Программирование">Программирование</option>
+                                    <option value="Аналитика">Аналитика</option>
+                                    <option value="Математика">Математика</option>
+                                    <option value="Гуманитарные науки">Гуманитарные науки</option>
+                                    <!-- Добавьте другие категории по мере необходимости -->
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="searchLevelModal" class="form-label">Уровень</label>
+                                <select class="form-select" id="searchLevelModal" name="level">
+                                    <option value="" selected>Все уровни</option>
+                                    <option value="beginner">Начальный</option>
+                                    <option value="intermediate">Средний</option>
+                                    <option value="advanced">Продвинутый</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="searchMaterialTypeModal" class="form-label">Тип материала</label>
+                                <select class="form-select" id="searchMaterialTypeModal" name="material_type">
+                                     <option value="" selected>Все типы</option>
+                                     <option value="video">Видео</option>
+                                     <option value="text">Текст</option>
+                                     <option value="quiz">Тест</option>
+                                     <option value="assignment">Задание</option>
+                                </select>
+                            </div>
+                        </div>
+                         <div class="mb-3">
+                            <label for="searchTeacherNameModal" class="form-label">Имя преподавателя</label>
+                            <input type="text" class="form-control" id="searchTeacherNameModal" name="teacher_name" placeholder="Часть имени преподавателя">
+                        </div>
+                        <div class="mb-3">
+                             <small class="text-muted">Область поиска (для Whoosh - используйте чекбоксы на главной, если нужен старый стиль):</small><br>
+                             <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="searchInCoursesModal" name="search_in_courses" checked>
+                                <label class="form-check-label" for="searchInCoursesModal">Курсы</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="searchInMaterialsModal" name="search_in_materials" checked>
+                                <label class="form-check-label" for="searchInMaterialsModal">Материалы</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="searchInTeachersModal" name="search_in_teachers" checked>
+                                <label class="form-check-label" for="searchInTeachersModal">Преподаватели</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-search me-1"></i>Найти
+                        </button>
+                    </form>
+                    <div id="searchResults" class="mt-4" style="max-height: 400px; overflow-y: auto;">
+                        <!-- Результаты поиска появятся здесь -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Create Course Modal (для dashboard) -->
+    <div class="modal fade" id="createCourseModal" tabindex="-1" aria-labelledby="createCourseModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createCourseModalLabel">Создать новый курс</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createCourseForm">
+                        <div class="mb-3">
+                            <label for="courseTitle" class="form-label">Название курса</label>
+                            <input type="text" class="form-control" id="courseTitle" name="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="courseDescription" class="form-label">Описание</label>
+                            <textarea class="form-control" id="courseDescription" name="description" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="courseCategory" class="form-label">Категория</label>
+                            <input type="text" class="form-control" id="courseCategory" name="category" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="courseLevel" class="form-label">Уровень</label>
+                            <select class="form-select" id="courseLevel" name="level" required>
+                                <option value="beginner">Начальный</option>
+                                <option value="intermediate">Средний</option>
+                                <option value="advanced">Продвинутый</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Создать курс</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', path='/js/app.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

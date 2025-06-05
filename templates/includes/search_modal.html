@@ -1,0 +1,71 @@
+<!-- Search Modal -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLabel">Поиск контента</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="searchFormModal">
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label for="searchInputModal" class="form-label">Поисковый запрос</label>
+                            <input type="text" class="form-control" id="searchInputModal" name="q" placeholder="Введите ключевые слова, название курса...">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="searchCategoryModal" class="form-label">Категория</label>
+                            <select class="form-select" id="searchCategoryModal" name="category">
+                                <option value="" selected>Все категории</option>
+                                <option value="Программирование">Программирование</option>
+                                <option value="Аналитика">Аналитика</option>
+                                <option value="Математика">Математика</option>
+                                <option value="Гуманитарные науки">Гуманитарные науки</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="searchLevelModal" class="form-label">Уровень</label>
+                            <select class="form-select" id="searchLevelModal" name="level">
+                                <option value="" selected>Все уровни</option>
+                                <option value="beginner">Начальный</option>
+                                <option value="intermediate">Средний</option>
+                                <option value="advanced">Продвинутый</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="searchMaterialTypeModal" class="form-label">Тип материала</label>
+                            <select class="form-select" id="searchMaterialTypeModal" name="material_type">
+                                 <option value="" selected>Все типы</option>
+                                 <option value="video">Видео</option>
+                                 <option value="text">Текст</option>
+                                 <option value="quiz">Тест</option>
+                                 <option value="assignment">Задание</option>
+                            </select>
+                        </div>
+                    </div>
+                     <div class="mb-3">
+                        <label for="searchTeacherNameModal" class="form-label">Имя преподавателя</label>
+                        <input type="text" class="form-control" id="searchTeacherNameModal" name="teacher_name" placeholder="Часть имени преподавателя">
+                    </div>
+                    <div class="mb-3">
+                         <small class="text-muted">Область поиска:</small><br>
+                         <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="searchInCoursesModal" name="search_in_courses" checked>
+                            <label class="form-check-label" for="searchInCoursesModal">Курсы</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="searchInMaterialsModal" name="search_in_materials" checked>
+                            <label class="form-check-label" for="searchInMaterialsModal">Материалы</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="searchInTeachersModal" name="search_in_teachers" checked>
+                            <label class="form-check-label" for="searchInTeachersModal">Преподаватели</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search me-1"></i>Найти</button>
+                </form>
+                <div id="searchResults" class="mt-4" style="max-height: 400px; overflow-y: auto;"></div>
+            </div>
+        </div>
+    </div>
+</div>

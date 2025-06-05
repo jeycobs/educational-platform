@@ -1,0 +1,62 @@
+<!-- Auth Modal -->
+<div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="authModalTitle">Вход в систему</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-pills nav-fill mb-3" id="authTabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" onclick="showLogin()">Вход</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showRegister()">Регистрация</a>
+                    </li>
+                </ul>
+                
+                <div id="loginFormContent">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="loginEmail" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Пароль</label>
+                            <input type="password" class="form-control" id="loginPassword" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Войти</button>
+                        <div id="loginMsg" class="mt-2 text-danger small"></div>
+                    </form>
+                </div>
+                
+                <div id="registerFormContent" style="display: none;">
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label for="registerName" class="form-label">Имя</label>
+                            <input type="text" class="form-control" id="registerName" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="registerEmail" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerRole" class="form-label">Роль</label>
+                            <select class="form-select" id="registerRole" name="role" required>
+                                <option value="student" selected>Студент</option>
+                                <option value="teacher">Преподаватель</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Пароль</label>
+                            <input type="password" class="form-control" id="registerPassword" name="password" required minlength="6">
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Зарегистрироваться</button>
+                        <div id="registerMsg" class="mt-2 text-danger small"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+<!-- Create Course Modal -->
+<div class="modal fade" id="createCourseModal" tabindex="-1" aria-labelledby="createCourseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createCourseModalLabel">Создать новый курс</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createCourseForm">
+                    <div class="mb-3">
+                        <label for="courseTitle" class="form-label">Название курса</label>
+                        <input type="text" class="form-control" id="courseTitle" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="courseDescription" class="form-label">Описание</label>
+                        <textarea class="form-control" id="courseDescription" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="courseCategory" class="form-label">Категория</label>
+                        <input type="text" class="form-control" id="courseCategory" name="category" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="courseLevel" class="form-label">Уровень</label>
+                        <select class="form-select" id="courseLevel" name="level" required>
+                            <option value="beginner">Начальный</option>
+                            <option value="intermediate">Средний</option>
+                            <option value="advanced">Продвинутый</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Создать курс</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

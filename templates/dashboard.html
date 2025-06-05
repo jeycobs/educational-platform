@@ -39,43 +39,33 @@
                      <a href="#settings-pane" class="list-group-item list-group-item-action" data-bs-toggle="tab" role="tab">
                         <i class="bi bi-gear-fill me-2"></i>Настройки
                     </a>
-                    <a href="#" id="analyticsTabLink" class="list-group-item list-group-item-action" data-bs-toggle="tab" role="tab" style="display: none;">
-                        <i class="bi bi-bar-chart-line-fill me-2"></i>Аналитика (Admin/Teacher)
-                    </a>
                 </div>
             </div>
         </div>
 
         <div class="col-lg-9">
             <div class="tab-content">
-                <div class="tab-pane fade show active dashboard-tab-pane" id="my-courses-pane" role="tabpanel">
-                    <h4 class="mb-3">Курсы для изучения</h4>
+                <div class="tab-pane fade show active" id="my-courses-pane" role="tabpanel">
+                    <h4 class="mb-3">Все курсы платформы</h4>
                     <div class="row" id="myCoursesContent">
                         <div class="loading"></div>
                     </div>
                 </div>
-                <div class="tab-pane fade dashboard-tab-pane" id="progress-pane" role="tabpanel">
+                <div class="tab-pane fade" id="progress-pane" role="tabpanel">
                     <h4 class="mb-3">Ваш прогресс по курсам</h4>
                     <div id="progressContent">
                          <div class="loading"></div>
                     </div>
                 </div>
-                <div class="tab-pane fade dashboard-tab-pane" id="activity-pane" role="tabpanel">
+                <div class="tab-pane fade" id="activity-pane" role="tabpanel">
                     <h4 class="mb-3">Ваша недавняя активность</h4>
                     <div id="activityContent">
-                        <p class="text-muted">Загрузка активности...</p>
-                        <!-- Активность будет загружена сюда -->
+                        <div class="loading"></div>
                     </div>
                 </div>
-                 <div class="tab-pane fade dashboard-tab-pane" id="settings-pane" role="tabpanel">
+                 <div class="tab-pane fade" id="settings-pane" role="tabpanel">
                     <h4 class="mb-3">Настройки профиля</h4>
                     <p class="text-muted">Раздел настроек находится в разработке.</p>
-                    <!-- Форма редактирования профиля может быть здесь -->
-                </div>
-                <div class="tab-pane fade dashboard-tab-pane" id="analytics-pane" role="tabpanel">
-                     <h4 class="mb-3">Аналитика платформы (для преподавателей и админов)</h4>
-                     <p class="text-muted">Раздел аналитики находится в разработке.</p>
-                     <!-- Данные аналитики будут здесь -->
                 </div>
             </div>
         </div>
@@ -85,45 +75,13 @@
 
 {% block scripts %}
 <script>
-// Функции для дашборда, специфичные для этой страницы
-async function loadUserActivity() {
-    const container = document.getElementById('activityContent');
-    if (!container || !api.currentUser) return;
-    container.innerHTML = '<div class="loading my-3"></div>';
-
-    try {
-        // Предположим, что есть эндпоинт для получения активностей пользователя
-        // Например, GET /activities?user_id={id} или специальный /users/me/activities
-        // Пока используем заглушку или вы можете создать такой эндпоинт
-        // const activities = await api.request(`/activities?user_id=${api.currentUser.id}&limit=10&sort_by=timestamp_desc`);
-        
-        // Заглушка, так как эндпоинт /activities без параметров вернет ВСЕ активности
-        // Лучше создать специальный эндпоинт для активностей ТЕКУЩЕГО пользователя
-        container.innerHTML = '<p class="text-muted">Загрузка активностей временно недоступна.</p>';
-        
-        /* Пример отображения, если бы был эндпоинт:
-        if (!activities || activities.length === 0) {
-            container.innerHTML = '<div class="alert alert-light">Нет недавней активности.</div>';
-            return;
-        }
-        container.innerHTML = activities.map(act => `
-            <div class="activity-item d-flex justify-content-between align-items-center">
-                <div>
-                    <i class="bi bi-${act.action === 'complete' ? 'check-circle-fill text-success' : 'eye-fill text-info'} me-2"></i>
-                    <strong>${act.action}</strong> материала #${act.material_id}
-                </div>
-                <small class="text-muted">${new Date(act.timestamp).toLocaleString()}</small>
-            </div>
-        `).join('');
-        */
-    } catch (error) {
-        container.innerHTML = '<div class="alert alert-danger">Ошибка загрузки активности.</div>';
-    }
-}
-
-
 document.addEventListener('DOMContentLoaded', function() {
-    checkAuthAndLoadDashboard(); // Эта функция из app.js
+    // Эта функция из app.js отвечает за всю логику дашборда
+    if (typeof checkAuthAndLoadDashboard === 'function') {
+        checkAuthAndLoadDashboard();
+    } else {
+        console.error('Функция checkAuthAndLoadDashboard не найдена. Убедитесь, что app.js загружен правильно.');
+    }
 });
 </script>
 {% endblock %}

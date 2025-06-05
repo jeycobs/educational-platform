@@ -1,0 +1,142 @@
+<!-- templates/course_detail.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ course.title }} - EduPlatform{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Хлебные крошки для навигации -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Главная</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ course.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Основная информация о курсе -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="badge bg-primary me-2 fs-6">{{ course.category }}</span>
+                            <span class="badge bg-secondary fs-6">{{ course.level }}</span>
+                        </div>
+                        <!-- Можно добавить кнопку "Редактировать", если пользователь - автор курса -->
+                    </div>
+
+                    <h1 class="card-title display-6 mb-3">{{ course.title }}</h1>
+                    
+                    <p class="lead">{{ course.description or "Подробное описание курса скоро появится." }}</p>
+                    
+                    <hr>
+                    
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-person-circle fs-3 me-3 text-muted"></i>
+                        <div>
+                            <div class="text-muted small">Преподаватель</div>
+                            <div class="fw-bold">{{ teacher_name or "Не назначен" }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Материалы курса -->
+            <h3 class="mb-3">Материалы курса</h3>
+            <div id="materials-container">
+                <!-- Сюда будут загружены материалы курса -->
+                <div class="loading"></div>
+            </div>
+        </div>
+
+        <!-- Боковая панель с действиями -->
+        <div class="col-lg-4">
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Начать обучение</h5>
+                    <p class="card-text text-muted">Запишитесь на курс, чтобы получить доступ ко всем материалам и отслеживать свой прогресс.</p>
+                    <button class="btn btn-success btn-lg w-100" id="enroll-button">Записаться на курс</button>
+                    <!-- После записи можно показывать прогресс -->
+                    <div id="course-progress" class="mt-3" style="display: none;">
+                        <h6>Ваш прогресс</h6>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Получаем ID курса из URL (этот код нужно будет добавить в app.js или сюда)
+    const courseId = {{ course.id }};
+
+    // Функция для загрузки материалов
+    async function loadMaterials(courseId) {
+        const container = document.getElementById('materials-container');
+        if (!container) return;
+
+        try {
+            // Используем существующий метод API для получения материалов курса
+            const materials = await api.getCourseMaterials(courseId);
+            
+            if (!materials || materials.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">Материалы для этого курса еще не добавлены.</div>';
+                return;
+            }
+
+            container.innerHTML = materials.map((material, index) => `
+                <div class="material-item d-flex justify-content-between align-items-center mb-2 p-3 border rounded">
+                    <div>
+                        <i class="bi bi-${getMaterialIcon(material.type)} me-2 text-primary"></i>
+                        <span class="fw-bold">Раздел ${index + 1}:</span> ${material.title}
+                    </div>
+                    <span class="badge bg-light text-dark">${material.type}</span>
+                </div>
+            `).join('');
+        } catch (error) {
+            container.innerHTML = '<div class="alert alert-danger">Не удалось загрузить материалы курса.</div>';
+            console.error('Failed to load materials:', error);
+        }
+    }
+
+    // Вспомогательная функция для иконок
+    function getMaterialIcon(type) {
+        switch(type) {
+            case 'video': return 'play-circle-fill';
+            case 'text': return 'file-text-fill';
+            case 'quiz': return 'patch-question-fill';
+            case 'assignment': return 'file-earmark-check-fill';
+            default: return 'file-earmark-fill';
+        }
+    }
+    
+    // Запускаем загрузку при открытии страницы
+    document.addEventListener('DOMContentLoaded', () => {
+        loadMaterials(courseId);
+        
+        // Добавляем обработчик на кнопку "Записаться"
+        const enrollButton = document.getElementById('enroll-button');
+        if (enrollButton) {
+            enrollButton.addEventListener('click', () => {
+                // Логика записи на курс (требует API эндпоинта)
+                // Пока просто покажем алерт
+                if (api.currentUser) {
+                    showAlert('Вы успешно записаны на курс! (функционал в разработке)', 'success');
+                    enrollButton.disabled = true;
+                    enrollButton.textContent = 'Вы записаны';
+                    document.getElementById('course-progress').style.display = 'block';
+                } else {
+                    showAlert('Пожалуйста, войдите в систему, чтобы записаться на курс.', 'warning');
+                    showAuthModal();
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

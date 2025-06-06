@@ -1,21 +1,5 @@
-/**
- * EduPlatform Frontend Application Script
- * 
- * Содержит всю клиентскую логику для образовательной платформы, включая:
- * - Взаимодействие с API (аутентификация, курсы, аналитика).
- * - Управление отображением данных на страницах.
- * - Обработку пользовательских событий (клики, отправка форм).
- *
- * Версия с централизованной инициализацией.
- */
-
-// Отладочное сообщение, чтобы убедиться, что загружается свежая версия файла
 console.log("ЗАГРУЖЕН ФАЙЛ APP.JS ВЕРСИЯ ОТ", new Date().toLocaleTimeString());
 
-
-// ===================================================================
-// 1. Класс для работы с API
-// ===================================================================
 
 class EduPlatformAPI {
     constructor() {
@@ -24,9 +8,7 @@ class EduPlatformAPI {
         this.currentUser = null;
     }
 
-    /**
-     * Инициализирует API: загружает данные текущего пользователя, если есть токен.
-     */
+
     async init() {
         if (this.token) {
             await this.loadCurrentUser();
@@ -34,12 +16,7 @@ class EduPlatformAPI {
         this.updateNavigation();
     }
 
-    /**
-     * Универсальный метод для отправки запросов к API.
-     * @param {string} endpoint - Путь к API эндпоинту (например, '/courses').
-     * @param {object} options - Опции для fetch() (method, body, headers и т.д.).
-     * @returns {Promise<any>} - Данные ответа в формате JSON.
-     */
+
     async request(endpoint, options = {}) {
         const url = this.baseURL + endpoint;
         const config = {
@@ -54,7 +31,6 @@ class EduPlatformAPI {
         try {
             const response = await fetch(url, config);
 
-            // Обработка истекшей сессии
             if (response.status === 401 && endpoint !== '/token') {
                 this.logout();
                 showAlert('Сессия истекла. Пожалуйста, войдите снова.', 'warning');
@@ -74,7 +50,6 @@ class EduPlatformAPI {
         }
     }
 
-    // --- Методы аутентификации ---
 
     async login(email, password) {
         const formData = new FormData();
@@ -123,8 +98,6 @@ class EduPlatformAPI {
         }
     }
 
-    // --- Методы работы с данными ---
-
     async getCourses(filters = {}) {
         const params = new URLSearchParams(filters);
         return await this.request(`/courses?${params.toString()}`);
@@ -156,8 +129,6 @@ class EduPlatformAPI {
         if (!this.currentUser) throw new Error("User not authenticated");
         return await this.request(`/users/me/activities?limit=${limit}`);
     }
-    
-    // --- Методы для UI ---
 
     updateNavigation() {
         const authNav = document.getElementById('authNav');
@@ -191,42 +162,25 @@ class EduPlatformAPI {
 }
 
 
-// ===================================================================
-// 2. Глобальный экземпляр API и Инициализация
-// ===================================================================
-
 const api = new EduPlatformAPI();
 
-/**
- * Центральная точка входа для всей клиентской логики.
- * Запускается после загрузки HTML.
- */
+
 document.addEventListener('DOMContentLoaded', () => {
     api.init().then(() => {
-        // --- Глобальные обработчики (работают на всех страницах) ---
         document.getElementById('loginForm')?.addEventListener('submit', handleLogin);
         document.getElementById('registerForm')?.addEventListener('submit', handleRegister);
         document.getElementById('searchFormModal')?.addEventListener('submit', handleSearch);
         document.getElementById('createCourseForm')?.addEventListener('submit', handleCreateCourse);
 
-        // --- Логика для конкретных страниц (определяется по наличию элементов) ---
-        
-        // Если на странице есть контейнер для курсов, это главная страница.
         if (document.getElementById('coursesContainer')) {
             loadFeaturedCourses();
         }
         
-        // Если на странице есть навигация дашборда, это панель управления.
         if (document.getElementById('dashboardTabs')) {
             checkAuthAndLoadDashboard();
         }
     });
 });
-
-
-// ===================================================================
-// 3. Функции-обработчики событий (Handlers)
-// ===================================================================
 
 async function handleLogin(event) {
     event.preventDefault();
@@ -295,13 +249,7 @@ async function handleCreateCourse(event) {
 }
 
 
-// ===================================================================
-// 4. Функции отображения контента (UI/Display)
-// ===================================================================
 
-/**
- * Отображает карточки курсов в указанном контейнере.
- */
 function displayCourses(courses, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -326,9 +274,7 @@ function displayCourses(courses, containerId) {
         </div>`).join('');
 }
 
-/**
- * Отображает результаты поиска.
- */
+
 function displaySearchResults(results) {
     const container = document.getElementById('searchResults');
     if (!container) return;
@@ -351,9 +297,7 @@ function displaySearchResults(results) {
     container.innerHTML = `<h5 class="mt-3">Результаты поиска:</h5>${html}`;
 }
 
-/**
- * Загружает и отображает популярные курсы на главной странице.
- */
+
 async function loadFeaturedCourses() {
     const container = document.getElementById('coursesContainer');
     if (!container) return;
@@ -367,9 +311,6 @@ async function loadFeaturedCourses() {
 }
 
 
-// ===================================================================
-// 5. Логика для страницы "Панель управления" (Dashboard)
-// ===================================================================
 
 async function checkAuthAndLoadDashboard() {
     if (!api.token) {
@@ -494,10 +435,6 @@ async function loadUserActivity() {
 }
 
 
-// ===================================================================
-// 6. Вспомогательные и глобальные функции
-// ===================================================================
-
 function getActivityIcon(action, materialType) {
     if (action === 'complete') return 'check-circle-fill text-success';
     if (action === 'submit_quiz') return 'patch-check-fill text-info';
@@ -540,8 +477,6 @@ function showAlert(message, type = 'info', duration = 5000) {
     }
 }
 
-// --- Функции для вызова из HTML: делаем их глобальными ---
-
 function updateAuthTabs(activeTab) {
     document.querySelectorAll('#authTabs .nav-link').forEach(tab => tab.classList.remove('active'));
     document.querySelector(`#authTabs .nav-link[data-auth-tab="${activeTab}"]`)?.classList.add('active');
@@ -565,7 +500,7 @@ window.showAuthModal = function() {
     const modalEl = document.getElementById('authModal');
     if (modalEl) {
         bootstrap.Modal.getOrCreateInstance(modalEl).show();
-        showLogin(); // По умолчанию показываем форму входа
+        showLogin(); 
     }
 }
 
@@ -581,14 +516,13 @@ window.showCreateCourseModal = function() {
 
 window.performSearchWithCategory = function(category) {
     showSearchModal();
-    // Небольшая задержка, чтобы модальное окно успело появиться
     setTimeout(() => {
         const categorySelect = document.getElementById('searchCategoryModal');
         const searchForm = document.getElementById('searchFormModal');
         if (categorySelect) categorySelect.value = category;
         if (searchForm) handleSearch({ preventDefault: () => {}, target: searchForm });
     }, 200);
-}// --- Делаем функции доступными глобально для HTML ---
+}
 window.showAuthModal = showAuthModal;
 window.showSearchModal = showSearchModal;
 window.showCreateCourseModal = showCreateCourseModal;

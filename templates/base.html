@@ -1,4 +1,3 @@
-<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -7,7 +6,6 @@
     <title>{% block title %}Образовательная платформа{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- +++ ИЗМЕНЕНО +++ -->
     <link href="{{ url_for('static', path='/css/custom.css') }}?v={{ now_timestamp }}" rel="stylesheet">
 </head>
 <body>
@@ -25,7 +23,7 @@
                         <a class="nav-link" href="/"><i class="bi bi-house-door-fill me-1"></i>Главная</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/dashboard" style="display: none;"><!-- JS покажет если авторизован -->
+                        <a class="nav-link" href="/dashboard" style="display: none;">
                             <i class="bi bi-speedometer2 me-1"></i>Панель управления
                         </a>
                     </li>
@@ -36,7 +34,6 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto" id="authNav">
-                    <!-- Заполняется JavaScript -->
                 </ul>
             </div>
         </div>
@@ -54,14 +51,12 @@
         </div>
     </footer>
 
-    <!-- Модальные окна (без изменений) -->
     {% include 'includes/auth_modal.html' %}
     {% include 'includes/search_modal.html' %}
     {% include 'includes/create_course_modal.html' %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- +++ ИЗМЕНЕНО +++ -->
     <script src="{{ url_for('static', path='/js/app.js') }}?v={{ now_timestamp }}"></script>
     
     {% block scripts %}{% endblock %}

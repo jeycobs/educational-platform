@@ -1,10 +1,8 @@
-<!-- templates/index.html -->
 {% extends "base.html" %}
 
 {% block title %}EduPlatform - Главная{% endblock %}
 
 {% block content %}
-<!-- Секция "Герой" -->
 <div class="p-5 mb-4 bg-light rounded-3 hero-section bg-gradient text-white">
     <div class="container-fluid py-5">
         <h1 class="display-5 fw-bold">Добро пожаловать на EduPlatform</h1>
@@ -13,14 +11,11 @@
     </div>
 </div>
 
-<!-- Секция популярных курсов -->
 <h2 class="mb-4">Популярные курсы</h2>
 <div class="row" id="coursesContainer">
-    <!-- Курсы будут загружены сюда с помощью JavaScript -->
     <div class="loading"></div>
 </div>
 
-<!-- Секция категорий -->
 <div class="mt-5">
     <h3 class="text-center mb-4">Исследуйте по категориям</h3>
     <div class="d-flex justify-content-center flex-wrap gap-2">
@@ -34,8 +29,6 @@
 
 {% block scripts %}
 <script>
-// Добавляем функцию для поиска по категории, если ее нет в глобальной области
-// В последней версии app.js она уже вынесена в window
 if (typeof window.performSearchWithCategory !== 'function') {
     window.performSearchWithCategory = function(category) {
         showSearchModal();

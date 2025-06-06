@@ -1,13 +1,11 @@
-# run_etl.py
 import asyncio
-import httpx # Для выполнения HTTP запросов
+import httpx
 import csv
 import json
 from pathlib import Path
 from datetime import datetime
-from typing import Optional, List, Dict, Any # <--- ДОБАВЛЕН ЭТОТ ИМПОРТ
+from typing import Optional, List, Dict, Any
 
-# --- Настройки ---
 API_BASE_URL = "http://127.0.0.1:8000" 
 ADMIN_EMAIL = "maria.admin@example.com" 
 ADMIN_PASSWORD = "testpassword"          
@@ -15,7 +13,6 @@ ADMIN_PASSWORD = "testpassword"
 OUTPUT_DIR = Path(__file__).resolve().parent / "data_pipeline_output"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# --- Вспомогательные функции ---
 async def get_admin_token(client: httpx.AsyncClient) -> Optional[str]:
     """Получает токен администратора."""
     print("Attempting to get admin token...")
@@ -57,16 +54,13 @@ def save_to_csv(data: List[Dict[str, Any]], filename: str):
     
     filepath = OUTPUT_DIR / filename
     try:
-        # Проверяем, что data - это список и первый элемент - словарь
         if not isinstance(data, list) or not data or not isinstance(data[0], dict):
             print(f"Data for {filename} is not in the expected List[Dict] format. Skipping CSV save for this item.")
-            # Можно попробовать сохранить как JSON для отладки
-            # save_to_json(data, filename.replace(".csv", "_debug.json"))
             return
 
         with open(filepath, "w", newline="", encoding="utf-8") as csvfile:
-            fieldnames = list(data[0].keys()) # Берем ключи из первого словаря как заголовки
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames, extrasaction='ignore') # ignore если есть лишние ключи в data
+            fieldnames = list(data[0].keys())
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames, extrasaction='ignore')
             writer.writeheader()
             writer.writerows(data)
             print(f"Data successfully saved to {filepath}")
@@ -76,7 +70,7 @@ def save_to_csv(data: List[Dict[str, Any]], filename: str):
 
 def save_to_json(data: Any, filename: str):
     """Сохраняет данные в JSON файл."""
-    if data is None: # Проверка на None, а не просто not data, так как пустой список [] - это валидные данные
+    if data is None: 
         print(f"No data provided to save for {filename}.")
         return
         
@@ -88,7 +82,6 @@ def save_to_json(data: Any, filename: str):
     except Exception as e:
         print(f"Error saving data to {filepath}: {e}")
 
-# --- Основной пайплайн ---
 async def run_pipeline():
     """Основная функция для запуска ETL пайплайна."""
     print(f"--- Starting ETL Pipeline: {datetime.now()} ---")
@@ -107,8 +100,8 @@ async def run_pipeline():
 
         for data_key, endpoint_path in etl_endpoints.items():
             data = await fetch_etl_data(client, endpoint_path, admin_token)
-            if data is not None: # Проверяем, что данные были получены
-                save_to_csv(data if isinstance(data, list) else [data], f"{data_key}.csv") # Убедимся, что save_to_csv получает список
+            if data is not None: 
+                save_to_csv(data if isinstance(data, list) else [data], f"{data_key}.csv")
                 save_to_json(data, f"{data_key}.json")
             else:
                 print(f"Failed to fetch data for {data_key}, skipping save.")

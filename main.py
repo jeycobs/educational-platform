@@ -1,4 +1,3 @@
-# main.py
 import os
 import re
 from pathlib import Path
@@ -7,7 +6,7 @@ from datetime import datetime, timedelta
 from io import StringIO
 import csv
 import json
-import time  # <--- ДОБАВЛЕНО
+import time 
 
 from fastapi import FastAPI, Query, HTTPException, Depends, status, Request
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -31,7 +30,6 @@ from search_service import (
     delete_item_from_index, search_whoosh
 )
 
-# --- КОНФИГУРАЦИЯ ---
 SECRET_KEY = "your-super-secret-key-for-jwt-dont-use-in-prod-change-it" 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 
@@ -239,7 +237,6 @@ def require_role(*roles: str):
         return current_user
     return role_checker
 
-# --- Frontend Routes ---
 @app.get("/", response_class=HTMLResponse, tags=["Frontend"])
 async def read_index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "year": datetime.utcnow().year, "now_timestamp": int(time.time())})
@@ -259,7 +256,6 @@ async def get_course_detail_page(request: Request, course_id_page: int, db: Asyn
     except Exception:
         return templates.TemplateResponse("404.html", {"request": request, "now_timestamp": int(time.time())}, status_code=404)
 
-# --- API Endpoints ---
 @app.post("/token", response_model=Token, tags=["Auth"])
 async def login_for_access_token_api(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
     user_res = await db.execute(select(DBUser).where(DBUser.email == form_data.username))
@@ -305,7 +301,6 @@ async def get_course_materials_api(course_id: int, db: AsyncSession = Depends(ge
     result = await db.execute(select(DBMaterial).where(DBMaterial.course_id == course_id).order_by(DBMaterial.order_index))
     return result.scalars().all()
 
-# --- Search Endpoints ---
 @app.post("/admin/search/reindex-all", status_code=status.HTTP_200_OK, tags=["Admin", "Search"])
 async def reindex_all_content_api(
     db: AsyncSession = Depends(get_db), 
@@ -316,12 +311,10 @@ async def reindex_all_content_api(
     Доступно только для администраторов.
     """
     print("Starting full re-indexing process...")
-    # Очистка и инициализация индексов
     init_whoosh_indexes()
 
     counts = {"courses": 0, "materials": 0, "teachers": 0}
 
-    # Индексация курсов
     courses_res = await db.execute(select(DBCourse).options(selectinload(DBCourse.teacher)))
     for course in courses_res.scalars().all():
         index_course_item(
@@ -332,7 +325,6 @@ async def reindex_all_content_api(
         )
         counts["courses"] += 1
 
-    # Индексация материалов
     materials_res = await db.execute(
         select(DBMaterial).options(selectinload(DBMaterial.course))
     )
@@ -344,7 +336,6 @@ async def reindex_all_content_api(
         )
         counts["materials"] += 1
 
-    # Индексация преподавателей
     teachers_res = await db.execute(select(DBUser).where(DBUser.role.in_(["teacher", "admin"])))
     for teacher in teachers_res.scalars().all():
         index_teacher_item(db_id=teacher.id, name=teacher.name)
@@ -359,7 +350,6 @@ async def search_api(request: Request, q: Optional[str] = Query(None), category:
     facets_model = SearchFacets(categories=[SearchFacetValue(value=k, count=v) for k, v in raw_facets.get("categories", {}).items()], levels=[SearchFacetValue(value=k, count=v) for k, v in raw_facets.get("levels", {}).items()], tags=[SearchFacetValue(value=k, count=v) for k, v in raw_facets.get("tags", {}).items()], material_types=[SearchFacetValue(value=k, count=v) for k, v in raw_facets.get("material_types", {}).items()], teachers=[SearchFacetValue(value=k, count=v) for k, v in raw_facets.get("teachers", {}).items()])
     return SearchResponse(query=q, filters=dict(request.query_params), results=[SearchResultItem.model_validate(item) for item in results], facets=facets_model)
 
-# --- Analytics ---
 @app.get("/analytics/user/{user_id}/progress", response_model=List[Dict[str, Any]], tags=["Analytics"])
 async def get_user_progress_api(user_id: int, db: AsyncSession = Depends(get_db), current_user: DBUser = Depends(get_current_user)):
     if user_id != current_user.id and current_user.role not in ["admin", "teacher"]: raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to view this user's progress.")
@@ -381,7 +371,6 @@ async def get_user_progress_api(user_id: int, db: AsyncSession = Depends(get_db)
     return response_list
 
 
-# ETL Endpoints
 @app.get("/etl/user_course_interactions", response_model=List[UserCourseInteractionETL], tags=["ETL & Data Preparation"])
 async def etl_get_user_course_interactions_api(db: AsyncSession = Depends(get_db), current_user_admin: DBUser = Depends(require_role("admin"))):
     print("ETL: Starting User-Course Interactions data preparation...")

@@ -1,13 +1,10 @@
-# search_service.py
 import os
 from pathlib import Path
 from whoosh import index, qparser as whoosh_qparser 
-# from whoosh import facets # Убедитесь, что этого импорта нет
 from whoosh.fields import Schema, ID, TEXT, KEYWORD, STORED 
 from whoosh.query import And, Or, Term, Every 
 from whoosh.analysis import StandardAnalyzer
 from typing import List, Dict, Any, Optional, Tuple
-# from whoosh import writing # Не используется
 
 try:
     from whoosh.qparser.common import WildcardNotAllowedError, GtLtNotAllowedError
@@ -21,7 +18,6 @@ INDEX_DIR = Path(__file__).resolve().parent / INDEX_DIR_NAME
 analyzer = StandardAnalyzer()
 print("Using StandardAnalyzer for Whoosh Schemas.")
 
-# ... (схемы остаются такими же) ...
 course_schema = Schema(
     db_id=ID(stored=True, unique=True),
     title=TEXT(stored=True, analyzer=analyzer, field_boost=2.0),
@@ -48,7 +44,6 @@ ix_courses: Optional[index.Index] = None
 ix_materials: Optional[index.Index] = None
 ix_teachers: Optional[index.Index] = None
 
-# ... (функции get_or_create_index, init_whoosh_indexes, _index_item, index_*, delete_* остаются такими же) ...
 def get_or_create_index(index_path_str: str, schema_obj: Schema) -> index.Index:
     index_path = Path(index_path_str)
     if not index_path.exists():
@@ -134,7 +129,6 @@ def search_whoosh(
     all_search_results: List[Dict[str, Any]] = []
     facets_data: Dict[str, Any] = {"categories": {}, "levels": {}, "tags": {}, "material_types": {}, "teachers": {}}
 
-    # --- Поиск по Курсам ---
     if search_in_courses and ix_courses:
         try:
             with ix_courses.searcher() as searcher:
@@ -158,15 +152,12 @@ def search_whoosh(
                 if course_query_parts:
                     final_course_query = And(course_query_parts) if len(course_query_parts) > 1 else course_query_parts[0]
                 elif not any([query_str, filter_category, filter_level, filter_teacher_name, filter_tags]):
-                    final_course_query = Every() # Искать все, если нет критериев
+                    final_course_query = Every()
                 
                 if final_course_query:
                     results_courses = searcher.search(final_course_query, limit=limit, groupedby=["category", "level", "tags"])
                     
-                    # Получаем группы (фасеты)
                     if "category" in results_courses.facet_names():
-                        # results.groups("fieldname") возвращает словарь {терм: [doc_id1, doc_id2, ...]}
-                        # Нам нужно количество, т.е. len() от списка doc_id
                         facets_data["categories"] = {
                             term: len(doc_ids) for term, doc_ids in results_courses.groups("category").items()
                         }
@@ -185,7 +176,6 @@ def search_whoosh(
             print(f"Error during course search or faceting: {e}")
             import traceback; traceback.print_exc()
 
-    # --- Поиск по Материалам ---
     if search_in_materials and ix_materials:
         try:
             with ix_materials.searcher() as searcher:
@@ -216,7 +206,6 @@ def search_whoosh(
             print(f"Error during material search or faceting: {e}")
             import traceback; traceback.print_exc()
 
-    # --- Поиск по Преподавателям ---
     if search_in_teachers and ix_teachers:
         try:
             with ix_teachers.searcher() as searcher:
@@ -226,21 +215,11 @@ def search_whoosh(
                     parser_teachers = whoosh_qparser.QueryParser("name", schema=ix_teachers.schema, group=whoosh_qparser.OrGroup)
                     try: final_teacher_query = parser_teachers.parse(effective_teacher_query_str)
                     except whoosh_qparser.QueryParserError: final_teacher_query = parser_teachers.parse(whoosh_qparser.QueryParser.escape(effective_teacher_query_str))
-                elif not any([filter_teacher_name, query_str]): # Если не указан ни запрос, ни фильтр по имени преподавателя
-                    final_teacher_query = Every() # Искать всех преподавателей
+                elif not any([filter_teacher_name, query_str]): 
+                    final_teacher_query = Every() 
                 
                 if final_teacher_query:
                     results_teachers = searcher.search(final_teacher_query, limit=limit)
-                    # Для преподавателей фасеты по именам (если это нужно)
-                    # Уже формируется как {имя: количество}
-                    # teacher_names_facet = {}
-                    # for hit in results_teachers:
-                    #     teacher_name = hit["name"]
-                    #     teacher_names_facet[teacher_name] = teacher_names_facet.get(teacher_name, 0) + 1
-                    #     all_search_results.append({"id": int(hit["db_id"]), "title": teacher_name, "type": "teacher", "relevance_score": hit.score})
-                    # if teacher_names_facet : facets_data["teachers"] = teacher_names_facet
-                    
-                    # Упрощенный вариант без сбора фасетов для преподавателей, просто результаты
                     for hit in results_teachers:
                          all_search_results.append({"id": int(hit["db_id"]), "title": hit["name"], "type": "teacher", "relevance_score": hit.score})
 
@@ -249,5 +228,5 @@ def search_whoosh(
             import traceback; traceback.print_exc()
 
     all_search_results.sort(key=lambda x: x.get("relevance_score", 0), reverse=True)
-    final_facets = {k: v for k, v in facets_data.items() if v} # Убираем пустые словари из фасетов
+    final_facets = {k: v for k, v in facets_data.items() if v}
     return all_search_results[:limit], final_facets

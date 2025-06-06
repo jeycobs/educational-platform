@@ -1,4 +1,3 @@
-# db.py
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float, JSON, Index, Text, Boolean
@@ -31,16 +30,13 @@ class User(Base):
     role = Column(String(20), index=True, nullable=False, default="student")
     password_hash = Column(String(255), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    # +++ ИЗМЕНЕНО: Новые пользователи сразу активны +++
     is_active = Column(Boolean, default=True, nullable=False)
-    
     created_courses = relationship('Course', back_populates='teacher', foreign_keys='Course.teacher_id')
     activities = relationship('Activity', back_populates='user', cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<User(id={self.id}, name='{self.name}', email='{self.email}', role='{self.role}')>"
 
-# ... Остальные модели (Course, Material, Activity) без изменений ...
 class Course(Base):
     __tablename__ = 'courses'
     id = Column(Integer, primary_key=True, index=True)

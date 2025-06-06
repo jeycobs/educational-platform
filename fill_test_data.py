@@ -1,4 +1,3 @@
-# fill_test_data.py
 import asyncio
 from datetime import datetime, timedelta
 import random
@@ -112,7 +111,7 @@ async def fill_with_sample_data():
                         activity = Activity(user_id=student.id, material_id=material.id, action="complete" if is_completed_action else action,
                                             timestamp=material.created_at + timedelta(days=random.randint(1, 20), hours=random.randint(0,23)),
                                             duration=random.uniform(300, 3600) if action != "start" else None,
-                                            score=round(random.uniform(65, 95), 0) if material.type == "quiz" and is_completed_action else None, # Оценки 0-100
+                                            score=round(random.uniform(65, 95), 0) if material.type == "quiz" and is_completed_action else None,
                                             meta={"device": random.choice(["desktop", "mobile"])})
                         created_activities.append(activity)
                         if material.type == "quiz" and is_completed_action and activity.score is not None:

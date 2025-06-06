@@ -1,4 +1,3 @@
-<!-- templates/dashboard.html -->
 {% extends "base.html" %}
 
 {% block title %}Панель управления - EduPlatform{% endblock %}
@@ -76,7 +75,6 @@
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Эта функция из app.js отвечает за всю логику дашборда
     if (typeof checkAuthAndLoadDashboard === 'function') {
         checkAuthAndLoadDashboard();
     } else {
